@@ -1,3 +1,5 @@
+// Dijkastra's algo
+
 class Solution {
 public:
     int closestMeetingNode(vector<int>& edges, int node1, int node2) {
@@ -45,6 +47,57 @@ public:
                 }
             }
         }
+
+        int ans = -1, minDist = INT_MAX;
+        for (int i = 0; i < edges.size(); i++) 
+        {
+            if (vec1[i] != INT_MAX && vec2[i] != INT_MAX) 
+            {
+                int maxDist = max(vec1[i], vec2[i]);
+                if (maxDist < minDist ) 
+                {
+                    minDist = maxDist;
+                    ans = i;
+                }
+            }
+        }
+
+        return ans; 
+    }
+};
+
+
+// BFS
+
+class Solution {
+    void bfs(vector<int>& edges, int node , vector <int> &dist)
+    {
+        queue <int> q;
+        vector <bool> visited(edges.size() , false);
+
+        dist[node] = 0;
+        q.push(node);
+        visited[node] = true;
+        while(!q.empty())
+        {
+            int curr = q.front();
+            q.pop();
+
+            int next = edges[curr];
+            if (next != -1 && !visited[next])
+            {
+                q.push(next);
+                visited[curr] = true;
+                dist[next] = dist[curr] + 1;
+            }
+        }
+    }
+public:
+    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        vector <int> vec1(edges.size() , INT_MAX) , vec2(edges.size() , INT_MAX);
+        
+        bfs(edges , node1 , vec1);
+        bfs(edges , node2 , vec2);
 
         int ans = -1, minDist = INT_MAX;
         for (int i = 0; i < edges.size(); i++) 
